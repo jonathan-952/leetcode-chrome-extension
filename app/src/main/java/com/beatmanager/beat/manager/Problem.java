@@ -15,9 +15,23 @@ public class Problem {
 // 
   @Column(nullable = false, unique = true)
   private String name;
-  @Column(nullable = true, unique = true)
+  @Column(nullable = true, unique = false)
   private String notes;
+
+  @Column(nullable = false, unique = true)
+  private Integer number;
 
   @Column(nullable = false, unique = false)
   private String user_id;
+
+protected Problem() {}
+
+public Problem(String name, String notes, String user_id, Integer number) {
+    this.name = name;
+    this.notes = notes;
+    this.number = number;
+    this.user_id = user_id;
+
+}
+
 }

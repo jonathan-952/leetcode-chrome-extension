@@ -19,11 +19,41 @@ public class User {
   @Column(nullable = false, unique = true)
   private String email;
 
-  @Column(name = "password_hash", nullable = false)
+  @Column(name = "password_hash", nullable = true)
   private String passwordHash;
 
   @Column(name = "leetcode_problems", nullable = true)
-  public List<Problem> problems;
+  private List<Problem> problems;
+
+  @Column(name = "username", nullable = false)
+  private String username;
+
+  protected User(String username, String email, String password) {
+    this.username = username;
+    this.email = email;
+    this.passwordHash = password;
+
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public List<Problem> getProblems() {
+    return problems;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public User() {
+
+  }
+
+  
+
+
 
 }
  
