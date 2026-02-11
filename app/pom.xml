@@ -86,8 +86,8 @@
 	<groupId>org.springframework.boot</groupId>
 	<artifactId>spring-boot-starter-security-test</artifactId>
 	<scope>test</scope>
-</dependency>
-<!-- Source: https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
+</dependency> 
+
 <dependency>
     <groupId>org.springframework.data</groupId>
     <artifactId>spring-data-jpa</artifactId>
