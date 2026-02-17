@@ -1,11 +1,11 @@
-const API_URL = "https://your-backend.com/api";
+const API_URL = "http://localhost:8080/user";
 
-export async function handleLogin({ email, password }: { email: string; password: string }) {
+export async function handleLogin({ username, password }: { username: string; password: string }) {
   try {
-    const response = await fetch(`${API_URL}/auth/login`, {
+    const response = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ username, password }),
     });
     if (!response.ok) throw new Error("invalid credentials");
     const data = await response.json();
@@ -16,14 +16,14 @@ export async function handleLogin({ email, password }: { email: string; password
   }
 }
 
-export async function handleSignup({ email, password }: { email: string; password: string }) {
+export async function handleSignup({ username, email, password }: { username: string, email: string; password: string }) {
   try {
-    const response = await fetch(`${API_URL}/auth/signup`, {
+    const response = await fetch(`${API_URL}/sign-up`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ username, email, password }),
     });
-    if (!response.ok) throw new Error("signup failed");
+    if (!response.ok) throw new Error("sign-up failed");
     const data = await response.json();
     await chrome.storage.local.set({ jwt_token: data.token });
     return { success: true };

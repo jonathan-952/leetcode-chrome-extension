@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.beatmanager.beat.manager.DTO.LoginRequest;
 import com.beatmanager.beat.manager.repository.UserRepository;
 import com.beatmanager.beat.manager.repository.entity.User;
 import com.beatmanager.beat.manager.service.UserService;
@@ -32,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest user) {
         String token = userService.verify(user);
         return ResponseEntity.ok(token);
     }

@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.beatmanager.beat.manager.DTO.LoginRequest;
 import com.beatmanager.beat.manager.repository.UserRepository;
 import com.beatmanager.beat.manager.repository.entity.User;
 
@@ -31,7 +32,7 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    public String verify(User user) {
+    public String verify(LoginRequest user) {
         authManager.authenticate(
             new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
         );
