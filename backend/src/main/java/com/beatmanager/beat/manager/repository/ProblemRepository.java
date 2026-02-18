@@ -5,11 +5,12 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.beatmanager.beat.manager.repository.entity.User;
+import com.beatmanager.beat.manager.repository.entity.Problem;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
-    Optional<User> findByUsername(String username);
+    Optional<Problem[]> findByUsername(String user_id);
   
 }
+  

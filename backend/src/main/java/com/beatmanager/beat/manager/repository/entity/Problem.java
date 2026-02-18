@@ -9,31 +9,24 @@ import jakarta.persistence.Id;
 @Entity(name = "problem")
 public class Problem {
 
-// leetcode problem id
-// rating
-// notes
-// 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   
-  @Column(nullable = false, unique = true)
-  private String name;
+  @Column(nullable = false, unique = false)
+  private String problem_id;
+
   @Column(nullable = true, unique = false)
   private String notes;
-
-  @Column(nullable = false, unique = true)
-  private Integer number;
 
   @Column(nullable = false, unique = false)
   private String user_id;
 
 protected Problem() {}
 
-public Problem(String name, String notes, String user_id, Integer number) {
-    this.name = name;
+public Problem(String problem_id, String notes, String user_id) {
+    this.problem_id = problem_id;
     this.notes = notes;
-    this.number = number;
     this.user_id = user_id;
 
 }

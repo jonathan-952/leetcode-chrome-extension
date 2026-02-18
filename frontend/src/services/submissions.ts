@@ -1,4 +1,4 @@
-const API_URL = "https://your-backend.com/api";
+const API_URL = "http://localhost:8080/user/submission";
 
 export async function handleAccepted(payload: object) {
   try {
@@ -21,7 +21,7 @@ export async function handleAccepted(payload: object) {
   }
 }
 
-function getToken(): Promise<string | null> {
+export async function getToken(): Promise<string | null> {
   return new Promise((resolve) => {
     chrome.storage.local.get("jwt_token", (result) => {
       resolve((result.jwt_token as string) ?? null);

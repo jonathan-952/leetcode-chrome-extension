@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.beatmanager.beat.manager.DTO.LoginRequest;
 import com.beatmanager.beat.manager.repository.UserRepository;
+import com.beatmanager.beat.manager.repository.entity.Problem;
 import com.beatmanager.beat.manager.repository.entity.User;
+import com.beatmanager.beat.manager.service.ProblemService;
 import com.beatmanager.beat.manager.service.UserService;
 
 @RestController
@@ -26,6 +28,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProblemService problemService;
+
 
     @PostMapping("/sign-up")
     public User createUser(@RequestBody User user) {
@@ -44,9 +50,12 @@ public class UserController {
             .body("Invalid username or password");
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "JWT auth works";
+    @PostMapping("/submission")
+    public ResponseEntity<?> addProblem(@RequestBody Problem payload) {
+        problemService.saveProblem(payload);
+
+        return ResponseEntity.ok().build();
+
     }
 }
 
