@@ -14,7 +14,17 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     handleLogout().then(sendResponse);
     return true;
   }
-  if (message.type === "SUBMISSION_ACCEPTED") {
-    handleAccepted(message.payload);
+  if (message.type === "SAVE_SUBMISSION") {
+    (async () => {
+      try {
+        await handleAccepted(message.payload); // or create handleSaveSubmission
+        sendResponse({ success: true });
+      } catch (err) {
+        console.error(err);
+        sendResponse({ success: false });
+      }
+    })();
+
+    return true; // 🔥 required for async
   }
 });

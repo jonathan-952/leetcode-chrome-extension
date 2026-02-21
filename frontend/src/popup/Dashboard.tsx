@@ -14,14 +14,9 @@ interface Problem {
 
 const MOCK_PROBLEMS: Problem[] = [
   { id: 1, title: "Two Sum", topic: "Hash Map", rating: 5, notes: "Store complement as key, index as value.", url: "https://leetcode.com/problems/two-sum/", daysUntilReview: 0 },
-  { id: 2, title: "Valid Parentheses", topic: "Stack", rating: 4, notes: "Use stack, match closing brackets.", url: "https://leetcode.com/problems/valid-parentheses/", daysUntilReview: 0 },
-  { id: 3, title: "Longest Substring Without Repeating Characters", topic: "Sliding Window", rating: 3, notes: "Sliding window + set. Expand right, shrink left on duplicate.", url: "https://leetcode.com/problems/longest-substring-without-repeating-characters/", daysUntilReview: 1 },
-  { id: 4, title: "3Sum", topic: "Two Pointers", rating: 2, notes: "Sort first. Fix one, two pointer for rest. Skip duplicates.", url: "https://leetcode.com/problems/3sum/", daysUntilReview: 3 },
-  { id: 5, title: "Maximum Subarray", topic: "Dynamic Programming", rating: 4, notes: "Kadane's: track local and global max.", url: "https://leetcode.com/problems/maximum-subarray/", daysUntilReview: 5 },
-  { id: 6, title: "Climbing Stairs", topic: "Dynamic Programming", rating: 5, notes: "Fibonacci pattern. dp[i] = dp[i-1] + dp[i-2].", url: "https://leetcode.com/problems/climbing-stairs/", daysUntilReview: 7 },
-  { id: 7, title: "Median of Two Sorted Arrays", topic: "Binary Search", rating: 2, notes: "Binary search on smaller array. Revisit partition logic.", url: "https://leetcode.com/problems/median-of-two-sorted-arrays/", daysUntilReview: 10 },
-  { id: 8, title: "Merge Intervals", topic: "Intervals", rating: 3, notes: "Sort by start. Merge if overlap.", url: "https://leetcode.com/problems/merge-intervals/", daysUntilReview: 14 },
+
 ];
+// topics, rating, notes, problem_id, lastSubmitted timestamp
 
 type Tab = "today" | "week" | "all";
 

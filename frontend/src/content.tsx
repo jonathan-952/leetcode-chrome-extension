@@ -51,7 +51,6 @@ async function mountPrompt() {
     <SubmissionPrompt
       problemSlug={problemID}
       topics={topics}
-      url={location.href}
       onSave={(data) => {
         console.log("💾 Save triggered, payload:", data);
         chrome.runtime.sendMessage(

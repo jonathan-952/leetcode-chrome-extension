@@ -1,5 +1,7 @@
 package com.beatmanager.beat.manager.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +37,34 @@ public class ProblemService {
         if (duplicate.isPresent()) {
             Problem exists = duplicate.get();
 
-            // update fields: rating, notes, attempts, etc.
+            // update fields: rating, notes, etc.
+            exists.setNotes(payload.getNotes());
+            exists.setRating(payload.getRating());
 
-            problemRepo.save(exists);
+            return problemRepo.save(exists);
         }
-
-        
 
         payload.setUserID(username);
 
         return problemRepo.save(payload);
+    }
+
+    public List<Problem> get_all_problems(String authHeader) {
+        String token = null;
+        String username = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+
+            username = jwtService.extractUsername(token);
+            return problemRepo.findAllByUserID(username);
+        }
+
+        throw new RuntimeException("Invalid or missing token");
+
+         
+
+        
     }
 
 }

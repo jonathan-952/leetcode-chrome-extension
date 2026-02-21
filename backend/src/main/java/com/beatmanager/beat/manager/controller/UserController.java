@@ -1,6 +1,8 @@
 package com.beatmanager.beat.manager.controller;
 import org.springframework.security.core.AuthenticationException;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,13 +57,20 @@ public class UserController {
     @PostMapping("/submission")
     public ResponseEntity<?> addProblem(HttpServletRequest request, @RequestBody Problem payload) {
 
-        System.out.println(payload);
+        System.out.println("payload: " + payload);
 
         problemService.saveProblem(payload, request.getHeader("Authorization"));
 
         return ResponseEntity.ok().build();
 
     }
+
+    @GetMapping("/all_problems")
+    public ResponseEntity<List<Problem>> all_problems(HttpServletRequest request) {
+        List<Problem> problems = problemService.get_all_problems(request.getHeader("Authorization"));
+
+        return ResponseEntity.ok(problems);
+    }   
 }
 
 

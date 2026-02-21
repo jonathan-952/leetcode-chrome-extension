@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 
 type Rating = 1 | 2 | 3 | 4 | 5;
@@ -5,15 +6,11 @@ type Rating = 1 | 2 | 3 | 4 | 5;
 interface SubmissionPromptProps {
   problemSlug: string;
   topics: string[];
-  url: string;
   onSave: (data: {
-    id: string;
-    title: string;
-    topic: string;
-    rating: Rating;
+    problemID: string;
+    topics: string[];
+    rating: number;
     notes: string;
-    url: string;
-    daysUntilReview: number;
   }) => void;
   onDismiss: () => void;
 }
@@ -37,7 +34,6 @@ const StarRating = ({ value, onChange }: { value: Rating; onChange: (r: Rating) 
 export const SubmissionPrompt = ({
   problemSlug,
   topics,
-  url,
   onSave,
   onDismiss,
 }: SubmissionPromptProps) => {
@@ -51,13 +47,10 @@ export const SubmissionPrompt = ({
 
   const handleSave = () => {
     onSave({
-      id: crypto.randomUUID(),
-      title,
-      topic: topics[0] ?? "General",
+      problemID: problemSlug,
+      topics: topics.length ? topics : [],
       rating,
       notes,
-      url,
-      daysUntilReview: 0,
     });
   };
 
