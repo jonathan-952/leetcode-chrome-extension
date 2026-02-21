@@ -29,8 +29,8 @@ public class ProblemService {
 
             username = jwtService.extractUsername(token);
         }
-        
-        Optional<Problem> duplicate = problemRepo.findByUserIdAndProblemID(username, payload.getProblemID());
+
+        Optional<Problem> duplicate = problemRepo.findByUserIDAndProblemID(username, payload.getProblemID());
 
         if (duplicate.isPresent()) {
             Problem exists = duplicate.get();

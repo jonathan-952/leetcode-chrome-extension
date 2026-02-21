@@ -3,16 +3,16 @@ import react from '@vitejs/plugin-react'
 import { crx } from "@crxjs/vite-plugin";
 import manifest from "./manifest.json";
 import tailwindcss from '@tailwindcss/vite';
-import { resolve } from "path";
+import { resolve } from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  build: {
+  plugins: [react(), tailwindcss(), crx({ manifest })],
+   build: {
     rollupOptions: {
       input: {
-        popup: resolve(__dirname, "src/popup/popup.html"),
+        content_styles: resolve(__dirname, "src/content.compiled.css"),
       },
     },
   },
-  plugins: [react(), tailwindcss(), crx({ manifest })],
 })

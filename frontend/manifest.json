@@ -1,21 +1,28 @@
 {
-    "manifest_version": 3,
-    "name": "Leetcode Recall",
-    "description": "leetcode recall workflow assistant",
-    "version": "1.0",
-    "permissions": ["storage"],
-    "host_permissions": ["https://leetcode.com/*"],
-    "background": {
-        "service_worker": "src/services/background.js",
-        "type": "module"
-    },
-    "action": {
+  "manifest_version": 3,
+  "name": "Leetcode Recall",
+  "description": "leetcode recall workflow assistant",
+  "version": "1.0",
+  "permissions": ["storage"],
+  "host_permissions": ["https://leetcode.com/*"],
+  "background": {
+    "service_worker": "src/services/background.js",
+    "type": "module"
+  },
+  "action": {
     "default_popup": "src/popup/popup.html"
   },
-    "content_scripts": [
-        {
-        "matches": ["https://leetcode.com/problems/*"],
-        "js": ["src/content.js"]
-        }
-    ]
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/problems/*"],
+      "js": ["src/content.tsx"]
+
+    }
+  ],
+  "web_accessible_resources": [
+    {
+     "resources": ["src/content.compiled.css"],
+      "matches": ["https://leetcode.com/*"]
+    }
+  ]
 }

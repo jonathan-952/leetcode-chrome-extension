@@ -47,3 +47,7 @@ public Problem(String problemID, String notes, String userID) {
 }
 
 }
+
+
+// when i get back from break -> work on dashboard
+// get user rating, notes, etc.

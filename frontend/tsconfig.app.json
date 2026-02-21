@@ -24,6 +24,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "src/content.ts", "src/services/background.ts"]
+  "include": ["src", "src/content.tsx", "src/services/background.ts"]
 
 }

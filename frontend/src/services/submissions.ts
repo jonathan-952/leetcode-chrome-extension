@@ -2,6 +2,7 @@ const API_URL = "http://localhost:8080/user";
 
 export async function handleAccepted(payload: object) {
   try {
+    console.log(payload);
     const token = await getToken();
     if (!token) { console.error("Not logged in"); return; }
 

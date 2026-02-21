@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run build:css",
+    "build:css": "tailwindcss -i src/content.styles.css -o src/content.compiled.css",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.33",
     "@eslint/js": "^9.39.1",
+    "@tailwindcss/cli": "^4.2.0",
     "@types/chrome": "^0.1.36",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
