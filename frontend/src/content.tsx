@@ -4,10 +4,10 @@ import ReactDOM from "react-dom/client";
 import { SubmissionPrompt } from "./popup/SubmissionPrompt";
 // content.ts
 
-var token: string | null = null;
-var hasTriggered = false;
-var topics: string[] = grabTopics();
-var problemID: string = grabProblemSlug();
+let token: string | null = null;
+let hasTriggered = false;
+let topics: string[] = grabTopics();
+let problemID: string = grabProblemSlug();
 
 function grabTopics(): string[] {
   const tagEls = document.querySelectorAll('a[href^="/tag/"]');
@@ -17,7 +17,7 @@ function grabTopics(): string[] {
 }
 
 function grabProblemSlug(): string {
-  const match = location.href.match(/\/problems\/([^\/]+)/);
+  const match = location.href.match(/\/problems\/([^/]+)/);
   return match ? match[1] : "";
 }
 
@@ -100,7 +100,7 @@ async function startObserver() {
 
 startObserver();
 
-var lastUrl = location.href;
+let lastUrl = location.href;
 
 setInterval(async () => {
   if (location.href !== lastUrl) {
@@ -112,3 +112,4 @@ setInterval(async () => {
     console.log("🔄 URL changed, reset trigger");
   }
 }, 1000);
+

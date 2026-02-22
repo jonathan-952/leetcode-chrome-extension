@@ -1,7 +1,20 @@
 import { handleLogin, handleSignup, handleLogout } from "./auth";
+import fetchProblems from "./fetch";
 import { handleAccepted } from "./submissions";
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message.type === "FETCH_PROBLEMS") {
+    (async () => {
+      try {
+        const data = await fetchProblems(); // or create handleSaveSubmission
+        sendResponse({ success: true, data});
+      } catch (err) {
+        console.error(err);
+        sendResponse({ success: false, error: "No token or failed fetch" });
+      }
+    })();
+    return true;
+  }
   if (message.type === "LOGIN") {
     handleLogin(message.payload).then(sendResponse);
     return true;
@@ -21,7 +34,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         sendResponse({ success: true });
       } catch (err) {
         console.error(err);
-        sendResponse({ success: false });
+        sendResponse({ success: false , error: err});
       }
     })();
 
