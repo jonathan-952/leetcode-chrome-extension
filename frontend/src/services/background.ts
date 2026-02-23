@@ -52,5 +52,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         sendResponse({ success: false , error: err});
       }
     })();
+
+    return true;
   }
 });

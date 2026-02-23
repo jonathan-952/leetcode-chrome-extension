@@ -150,6 +150,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [selected, setSelected] = useState<Problem | null>(null);
   const [tab, setTab] = useState<Tab>("today");
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     chrome.runtime.sendMessage({ type: "FETCH_PROBLEMS" }, (response) => {
@@ -160,7 +161,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       if (response?.success && response.data) setProblems(response.data);
       else console.error(response?.error ?? "something went wrong.");
     });
-  }, []);
+  }, [refreshKey]);
 
   const handleSave = async (updated: Problem) => {
     chrome.runtime.sendMessage({ type: "SAVE_SUBMISSION", payload: updated }, (response) => {
@@ -180,7 +181,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
         console.error("Runtime error:", chrome.runtime.lastError.message);
         return;
       }
-      if (response?.success) setProblems((prev) => prev.filter((p) => p.id !== problem.id));
+      if (response?.success) setRefreshKey((k) => k + 1);
       else console.error(response?.error);
     });
     setSelected(null);
