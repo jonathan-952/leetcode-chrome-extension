@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,8 +58,6 @@ public class UserController {
     @PostMapping("/submission")
     public ResponseEntity<?> addProblem(HttpServletRequest request, @RequestBody Problem payload) {
 
-        System.out.println("payload: " + payload);
-
         problemService.saveProblem(payload, request.getHeader("Authorization"));
 
         return ResponseEntity.ok().build();
@@ -66,11 +65,20 @@ public class UserController {
     }
 
     @GetMapping("/all_problems")
-    public ResponseEntity<List<Problem>> all_problems(HttpServletRequest request) {
+    public ResponseEntity<List<Problem>> allProblems(HttpServletRequest request) {
         List<Problem> problems = problemService.get_all_problems(request.getHeader("Authorization"));
 
         return ResponseEntity.ok(problems);
-    }   
+    }
+    
+    @DeleteMapping("/complete_problem")
+    public ResponseEntity<?> deleteProblem(@RequestBody Problem problem, HttpServletRequest request) {
+
+        problemService.deleteProblem(problem, request.getHeader("Authorization"));
+
+        return ResponseEntity.ok().build();
+
+    }
 }
 
 

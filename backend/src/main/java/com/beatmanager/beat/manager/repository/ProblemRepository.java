@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.beatmanager.beat.manager.repository.entity.Problem;
 
+import jakarta.transaction.Transactional;
+
 @Repository
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
@@ -16,6 +18,8 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
     Optional<Problem> findByUserIDAndProblemID(String userID, String problemID);
 
     List<Problem> findAllByUserID(String userID);
+
+    Optional<Problem> deleteByUserIDAndProblemID(String userID, String problemID);
   
 }
   

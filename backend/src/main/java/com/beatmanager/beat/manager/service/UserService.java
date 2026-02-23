@@ -38,9 +38,5 @@ public class UserService {
         );
 
         return jwtService.generateToken(user.getUsername());
-
     }
-
-    
-
 }

@@ -11,7 +11,10 @@ import com.beatmanager.beat.manager.config.JWTFilter;
 import com.beatmanager.beat.manager.repository.ProblemRepository;
 import com.beatmanager.beat.manager.repository.entity.Problem;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class ProblemService {
 
     @Autowired
@@ -61,9 +64,21 @@ public class ProblemService {
         }
 
         throw new RuntimeException("Invalid or missing token");
+    }
 
-         
+    public Optional<Problem> deleteProblem(Problem problem, String authHeader) {
 
+        String token = null;
+        String username = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+
+            username = jwtService.extractUsername(token);
+
+            return problemRepo.deleteByUserIDAndProblemID(username, problem.getProblemID());
+        }
+         throw new RuntimeException("Problem not found or invalid token");
         
     }
 
