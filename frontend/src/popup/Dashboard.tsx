@@ -171,9 +171,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       console.log("RUNTIME ERROR:", chrome.runtime.lastError);
       return;
     }
-    console.log("FULL RESPONSE:", JSON.stringify(response));
     if (response?.success && response.data) {
-      console.log("PROBLEMS:", JSON.stringify(response.data));
       setProblems(response.data);
     }
   });

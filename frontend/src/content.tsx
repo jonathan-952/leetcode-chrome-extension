@@ -28,9 +28,7 @@ async function mountPrompt() {
   const shadow = host.attachShadow({ mode: "open" });
 
   const cssUrl = chrome.runtime.getURL("src/content.compiled.css");
-  console.log("🔧 fetching CSS from:", cssUrl);
   const cssText = await fetch(cssUrl).then(r => r.text());
-  console.log("🔧 CSS preview:", cssText.slice(0, 100));
 
   const styleEl = document.createElement("style");
   styleEl.textContent = cssText;
@@ -40,7 +38,6 @@ async function mountPrompt() {
   shadow.appendChild(mountPoint);
 
   const root = ReactDOM.createRoot(mountPoint);
-  console.log("🔧 React root created, rendering...");
 
   const unmount = () => {
     root.unmount();
@@ -52,14 +49,11 @@ async function mountPrompt() {
       problemSlug={problemID}
       topics={topics}
       onSave={(data) => {
-        console.log("💾 Save triggered, payload:", data);
         chrome.runtime.sendMessage(
           { type: "SAVE_SUBMISSION", payload: data },
-          (response) => {
+          () => {
             if (chrome.runtime.lastError) {
               console.error("❌ Message failed:", chrome.runtime.lastError.message);
-            } else {
-              console.log("✅ Background received:", response);
             }
           }
         );
@@ -68,8 +62,6 @@ async function mountPrompt() {
       onDismiss={unmount}
     />
   );
-
-  console.log("🔧 render called");
 }
 
 function checkForAccepted() {
@@ -83,7 +75,6 @@ function checkForAccepted() {
 
   if (statusText === "Accepted" && !hasTriggered) {
     hasTriggered = true;
-    console.log("✅ Accepted detected!");
     mountPrompt(); // ← replaces your sendMessage call
   }
 }
@@ -109,7 +100,6 @@ setInterval(async () => {
     token = await getToken();
     topics = grabTopics();
     problemID = grabProblemSlug();
-    console.log("🔄 URL changed, reset trigger");
   }
 }, 1000);
 
