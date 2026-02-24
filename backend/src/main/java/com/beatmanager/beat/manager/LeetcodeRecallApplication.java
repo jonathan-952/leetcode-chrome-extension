@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BeatManagerApplication {
+public class LeetcodeRecallApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BeatManagerApplication.class, args);
+		SpringApplication.run(LeetcodeRecallApplication.class, args);
 	}
 
 }
