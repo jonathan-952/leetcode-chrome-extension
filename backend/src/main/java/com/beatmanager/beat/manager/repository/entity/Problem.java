@@ -2,6 +2,7 @@ package com.beatmanager.beat.manager.repository.entity;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.data.annotation.LastModifiedDate;
@@ -32,7 +33,7 @@ public class Problem {
   private Integer rating;
 
   @Column(name = "last_submitted", nullable = false)
-  private LocalDateTime lastSubmitted;
+  private OffsetDateTime lastSubmitted;
 
   @Column(name = "user_id", nullable = false, unique = false)
   private String userID;
@@ -54,12 +55,12 @@ public class Problem {
 
   @PrePersist
   public void prePersist() {
-      lastSubmitted = LocalDateTime.now();
+      lastSubmitted = OffsetDateTime.now(); // stores with offset
   }
 
   @PreUpdate
   public void preUpdate() {
-      lastSubmitted = LocalDateTime.now();
+      lastSubmitted = OffsetDateTime.now();
   }
 
   public String getProblemID() {
@@ -74,6 +75,16 @@ public class Problem {
     return rating;
   }
 
+  public OffsetDateTime getLastSubmitted() {
+    return lastSubmitted;
+}
+
+public List<String> getTopics() {
+    return topics;
+}
+
+
+
 protected Problem() {}
 
 public Problem(List<String> topics, Integer rating, String problemID, String notes, String userID) {
@@ -85,7 +96,3 @@ public Problem(List<String> topics, Integer rating, String problemID, String not
 }
 
 }
-
-
-// when i get back from break -> work on dashboard
-// get user rating, notes, etc.

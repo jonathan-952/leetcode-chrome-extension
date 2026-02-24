@@ -14,13 +14,23 @@ export interface Problem {
 
 type Tab = "today" | "week" | "all";
 
-function getDaysUntilReview(lastSubmitted: string) {
-  const last = new Date(lastSubmitted);
-  const now = new Date();
-  const diff = (now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24);
-  if (diff >= 7) return 0;
-  if (diff >= 3) return 3;
-  return 10;
+
+function getIntervalForRating(rating: Rating) {
+  return [0, 1, 3, 5, 7, 10][rating]; 
+}
+
+function getDaysUntilReview(problem: Problem) {
+  try {
+    const last = new Date(problem.lastSubmitted.replace(" ", "T"));
+    const now = new Date();
+    if (isNaN(last.getTime())) return 999; // fallback to "All" tab
+    const diffMs = now.getTime() - last.getTime();
+    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+    const interval = getIntervalForRating(problem.rating);
+    return Math.max(0, Math.ceil(interval - diffDays));
+  } catch {
+    return 999;
+  }
 }
 
 const StarRating = ({
@@ -44,6 +54,7 @@ const StarRating = ({
     ))}
   </div>
 );
+
 
 interface DetailModalProps {
   problem: Problem;
@@ -72,9 +83,7 @@ const DetailModal = ({ problem, onClose, onSave, onComplete }: DetailModalProps)
               <p className="text-xs text-zinc-500 mb-1">{problem.topics?.join(", ")}</p>
               <h2 className="text-sm font-semibold text-white leading-snug">{problem.problemID}</h2>
             </div>
-            <button onClick={onClose} className="text-zinc-600 hover:text-zinc-300 transition-colors">
-              ✕
-            </button>
+            <button onClick={onClose} className="text-zinc-600 hover:text-zinc-300 transition-colors">✕</button>
           </div>
         </div>
 
@@ -83,6 +92,7 @@ const DetailModal = ({ problem, onClose, onSave, onComplete }: DetailModalProps)
             <p className="text-xs text-zinc-500 mb-2">Understanding</p>
             <StarRating value={rating} onChange={setRating} />
           </div>
+
           <div>
             <p className="text-xs text-zinc-500 mb-2">Notes</p>
             <textarea
@@ -92,23 +102,25 @@ const DetailModal = ({ problem, onClose, onSave, onComplete }: DetailModalProps)
               className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-zinc-200 resize-none focus:outline-none focus:border-zinc-600"
             />
           </div>
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-blue-400 hover:underline block"
-          >
+
+          <a href={url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:underline block">
             Open Problem ↗
           </a>
         </div>
 
         <div className="px-5 pb-5 flex gap-2">
           <button
-            onClick={() => { onSave({ ...problem, rating, notes }); onClose(); }}
-            className="flex-1 bg-white text-zinc-900 text-xs font-semibold py-2 rounded-lg hover:bg-zinc-200"
+            onClick={() => {
+              
+              onSave({ ...problem, rating, notes});
+              onClose();
+            }}
+            style={{ backgroundColor: '#ffffff', color: '#18181b' }}
+            className="flex-1 text-xs font-semibold py-2 rounded-lg hover:bg-zinc-200"
           >
             Save
           </button>
+
           <button
             onClick={() => { onComplete(); onClose(); }}
             className="flex-1 bg-green-600 text-white text-xs font-semibold py-2 rounded-lg hover:bg-green-500"
@@ -142,6 +154,7 @@ const ProblemCard = ({
   </button>
 );
 
+
 interface DashboardProps {
   onLogout: () => void;
 }
@@ -152,47 +165,39 @@ export default function Dashboard({ onLogout }: DashboardProps) {
   const [tab, setTab] = useState<Tab>("today");
   const [refreshKey, setRefreshKey] = useState(0);
 
-  useEffect(() => {
-    chrome.runtime.sendMessage({ type: "FETCH_PROBLEMS" }, (response) => {
-      if (chrome.runtime.lastError) {
-        console.error("Runtime error:", chrome.runtime.lastError.message);
-        return;
-      }
-      if (response?.success && response.data) setProblems(response.data);
-      else console.error(response?.error ?? "something went wrong.");
-    });
-  }, [refreshKey]);
+ useEffect(() => {
+  chrome.runtime.sendMessage({ type: "FETCH_PROBLEMS" }, (response) => {
+    if (chrome.runtime.lastError) {
+      console.log("RUNTIME ERROR:", chrome.runtime.lastError);
+      return;
+    }
+    console.log("FULL RESPONSE:", JSON.stringify(response));
+    if (response?.success && response.data) {
+      console.log("PROBLEMS:", JSON.stringify(response.data));
+      setProblems(response.data);
+    }
+  });
+}, [refreshKey]);
 
-  const handleSave = async (updated: Problem) => {
+  const handleSave = (updated: Problem) => {
     chrome.runtime.sendMessage({ type: "SAVE_SUBMISSION", payload: updated }, (response) => {
-      if (chrome.runtime.lastError) {
-        console.error("Runtime error:", chrome.runtime.lastError.message);
-        return;
-      }
-      if (response?.success) setProblems(response.data);
-      else console.error(response?.error ?? "something went wrong.");
+      if (response?.success) setRefreshKey((k) => k + 1);
     });
-    setProblems((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
   };
 
   const handleComplete = (problem: Problem) => {
     chrome.runtime.sendMessage({ type: "DELETE_PROBLEM", payload: problem }, (response) => {
-      if (chrome.runtime.lastError) {
-        console.error("Runtime error:", chrome.runtime.lastError.message);
-        return;
-      }
       if (response?.success) setRefreshKey((k) => k + 1);
-      else console.error(response?.error);
     });
     setSelected(null);
   };
 
-  const today = problems.filter((p) => getDaysUntilReview(p.lastSubmitted) === 0);
+  const today = problems.filter((p) => getDaysUntilReview(p) === 0);
   const week = problems.filter((p) => {
-    const days = getDaysUntilReview(p.lastSubmitted);
+    const days = getDaysUntilReview(p);
     return days > 0 && days <= 7;
   });
-  const all = problems.filter((p) => getDaysUntilReview(p.lastSubmitted) > 7);
+  const all = problems.filter((p) => getDaysUntilReview(p) > 7);
 
   const tabs = [
     { key: "today" as Tab, label: "Due Today", list: today },
