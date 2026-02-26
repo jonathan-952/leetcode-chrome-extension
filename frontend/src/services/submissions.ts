@@ -1,4 +1,4 @@
-const API_URL = "https://lcrecall.xyz";
+const API_URL = "https://lcrecall.xyz/user";
 
 export async function handleAccepted(payload: object) {
   try {

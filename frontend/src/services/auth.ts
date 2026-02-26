@@ -1,4 +1,4 @@
-const API_URL = "https://lcrecall.xyz";
+const API_URL = "https://lcrecall.xyz/user";
 
 export async function handleLogin({
   username,
@@ -8,6 +8,7 @@ export async function handleLogin({
   password: string;
 }) {
   try {
+    console.log("called: ", username, password);  // add this
     const response = await fetch(`${API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
