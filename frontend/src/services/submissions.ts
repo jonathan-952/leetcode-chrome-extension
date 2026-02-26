@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/user";
+const API_URL = "https://lcrecall.xyz";
 
 export async function handleAccepted(payload: object) {
   try {
