@@ -1,11 +1,10 @@
-// content.ts
 import { getToken } from "./services/submissions";
 import ReactDOM from "react-dom/client";
 import { SubmissionPrompt } from "./popup/SubmissionPrompt";
-// content.ts
 
 let token: string | null = null;
 let hasTriggered = false;
+let buttonPressed = false;
 let topics: string[] = grabTopics();
 let problemID: string = grabProblemSlug();
 
@@ -64,29 +63,40 @@ async function mountPrompt() {
   );
 }
 
+function attachSubmitListener() {
+  const submitBtn = document.querySelector<HTMLElement>('[data-e2e-locator="console-submit-button"]');
+  if (submitBtn && !submitBtn.dataset.lcListenerAttached) {
+    submitBtn.dataset.lcListenerAttached = "true";
+    submitBtn.addEventListener("click", () => {
+      buttonPressed = true;
+      console.log("🟢 Submit button clicked");
+    });
+  }
+}
+
 function checkForAccepted() {
-  const resultEl = document.querySelector(
-    '[data-e2e-locator="submission-result"]',
-  );
+  const resultEl = document.querySelector('[data-e2e-locator="submission-result"]');
 
   if (!resultEl || token == null) return;
 
   const statusText = resultEl.textContent?.trim();
 
-  if (statusText === "Accepted" && !hasTriggered) {
+  if (statusText === "Accepted" && buttonPressed && !hasTriggered) {
     hasTriggered = true;
-    mountPrompt(); // ← replaces your sendMessage call
+    buttonPressed = false;
+    mountPrompt();
   }
 }
 
 async function startObserver() {
   token = await getToken();
   const observer = new MutationObserver(() => {
+    attachSubmitListener();
     checkForAccepted();
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
-  console.log("👀 Observer started");
+  console.log("Observer started");
 }
 
 startObserver();
@@ -97,9 +107,9 @@ setInterval(async () => {
   if (location.href !== lastUrl) {
     lastUrl = location.href;
     hasTriggered = false;
+    buttonPressed = false;
     token = await getToken();
     topics = grabTopics();
     problemID = grabProblemSlug();
   }
 }, 1000);
-
