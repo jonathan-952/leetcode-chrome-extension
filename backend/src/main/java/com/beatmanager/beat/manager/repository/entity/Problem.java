@@ -15,7 +15,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity(name = "problem")
 public class Problem {
 
@@ -41,17 +45,6 @@ public class Problem {
   @ElementCollection
   private List<String> topics;
 
-  public void setUserID(String userID) {
-    this.userID = userID;
-  }
-
-  public void setRating(Integer rating) {
-    this.rating = rating;
-  }
-
-  public void setNotes(String notes) {
-    this.notes = notes;
-  }
 
   @PrePersist
   public void prePersist() {
@@ -62,26 +55,6 @@ public class Problem {
   public void preUpdate() {
       lastSubmitted = OffsetDateTime.now();
   }
-
-  public String getProblemID() {
-    return problemID;
-  }
-
-  public String getNotes() {
-    return notes;
-  }
-
-  public Integer getRating() {
-    return rating;
-  }
-
-  public OffsetDateTime getLastSubmitted() {
-    return lastSubmitted;
-}
-
-public List<String> getTopics() {
-    return topics;
-}
 
 
 

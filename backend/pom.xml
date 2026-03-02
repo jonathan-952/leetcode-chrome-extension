@@ -138,6 +138,16 @@
      <artifactId>httpclient</artifactId>
      <version>4.5.9</version>
    </dependency>
+   <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-mail</artifactId>
+</dependency>
+ 
+   <dependency>
+     <groupId>io.github.dean-lhb</groupId>
+     <artifactId>dean-framework-component-auth</artifactId>
+     <version>1.0.8</version>
+   </dependency>
  </dependencies>
 
 	<build>

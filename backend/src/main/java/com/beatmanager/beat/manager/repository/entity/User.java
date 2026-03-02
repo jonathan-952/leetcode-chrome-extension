@@ -9,7 +9,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity(name = "users")
 public class User {
 
@@ -19,6 +23,12 @@ public class User {
 
   @Column(nullable = false, unique = true)
   private String email;
+
+  @Column(name = "email_verified", nullable = false)
+  private boolean emailVerified = false;
+
+  @Column(name = "verification_token")
+  private String verificationToken; 
 
   @Column(name = "password", nullable = false)
   private String passwordHash;
@@ -37,21 +47,6 @@ public class User {
 
   }
 
-  public String getEmail() {
-    return email;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getPassword() {
-    return passwordHash;
-  }
-
-  public void setPassword(String password) {
-    this.passwordHash = password;
-  } 
-
+ 
 }
  
