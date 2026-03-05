@@ -45,7 +45,7 @@ export async function handleSignup({
       body: JSON.stringify({ username, email, password }),
     });
    if (!response.ok) {
-      const error = await response.text()
+      const error = await response.text();
       throw new Error(error);
     }
 

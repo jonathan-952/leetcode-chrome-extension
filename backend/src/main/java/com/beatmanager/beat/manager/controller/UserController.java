@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.beatmanager.beat.manager.DTO.LoginRequest;
+import com.beatmanager.beat.manager.DTO.RegistrationRequest;
 import com.beatmanager.beat.manager.repository.UserRepository;
 import com.beatmanager.beat.manager.repository.entity.Problem;
 import com.beatmanager.beat.manager.repository.entity.User;
@@ -41,9 +42,11 @@ public class UserController {
 
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody RegistrationRequest user) {
         try {
             userService.saveUser(user);
+        } catch (RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (MessagingException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Failed to send verification email");
         }

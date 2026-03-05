@@ -5,6 +5,8 @@ import org.springframework.security.core.AuthenticationException;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.management.RuntimeErrorException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.beatmanager.beat.manager.DTO.LoginRequest;
+import com.beatmanager.beat.manager.DTO.RegistrationRequest;
 import com.beatmanager.beat.manager.repository.UserRepository;
 import com.beatmanager.beat.manager.repository.entity.User;
 
@@ -36,15 +39,35 @@ public class UserService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
-    public void saveUser(User user) throws MessagingException {
+    public void saveUser(RegistrationRequest user) throws MessagingException {
+        String hashedPassword = encoder.encode(user.getPassword().trim());
+
+        User newUser = new User(
+            user.getUsername(), 
+            user.getEmail(),
+            // dont add plain password to this user object?
+            hashedPassword);
+        
+        Optional<User> usernameExists = userRepo.findByUsername(newUser.getUsername().trim());
+
+        Optional<User> emailExists = userRepo.findByEmail(newUser.getEmail().trim());
+
+        if (usernameExists.isPresent()) {
+            throw new RuntimeException("Username taken");
+        } 
+
+        if (emailExists.isPresent()) {
+            throw new RuntimeException("Email already exists");
+        } 
 
         String token = UUID.randomUUID().toString();
 
-        user.setVerificationToken(token);
-        user.setEmailVerified(false);
-        user.setPasswordHash(encoder.encode(user.getPasswordHash()));
-        userRepo.save(user);
-        emailService.sendVerificationEmail(user.getEmail(), token);
+    
+        newUser.setVerificationToken(token);
+        newUser.setEmailVerified(false);
+        newUser.setPasswordHash(hashedPassword);
+        userRepo.save(newUser);
+        emailService.sendVerificationEmail(newUser.getEmail(), token);
 
     }
 
@@ -77,5 +100,3 @@ public class UserService {
         userRepo.save(user);
     }
  }
-
- 
