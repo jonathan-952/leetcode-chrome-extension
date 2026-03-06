@@ -4,7 +4,6 @@ import { SubmissionPrompt } from "./popup/SubmissionPrompt";
 
 let token: string | null = null;
 let hasTriggered = false;
-let buttonPressed = false;
 let topics: string[] = grabTopics();
 let problemID: string = grabProblemSlug();
 
@@ -39,6 +38,7 @@ async function mountPrompt() {
   const root = ReactDOM.createRoot(mountPoint);
 
   const unmount = () => {
+    hasTriggered = true;
     root.unmount();
     host.remove();
   };
@@ -48,6 +48,7 @@ async function mountPrompt() {
       problemSlug={problemID}
       topics={topics}
       onSave={(data) => {
+        hasTriggered = true;
         chrome.runtime.sendMessage(
           { type: "SAVE_SUBMISSION", payload: data },
           () => {
@@ -63,17 +64,6 @@ async function mountPrompt() {
   );
 }
 
-function attachSubmitListener() {
-  const submitBtn = document.querySelector<HTMLElement>('[data-e2e-locator="console-submit-button"]');
-  if (submitBtn && !submitBtn.dataset.lcListenerAttached) {
-    submitBtn.dataset.lcListenerAttached = "true";
-    submitBtn.addEventListener("click", () => {
-      buttonPressed = true;
-      console.log("🟢 Submit button clicked");
-    });
-  }
-}
-
 function checkForAccepted() {
   const resultEl = document.querySelector('[data-e2e-locator="submission-result"]');
 
@@ -81,9 +71,8 @@ function checkForAccepted() {
 
   const statusText = resultEl.textContent?.trim();
 
-  if (statusText === "Accepted" && buttonPressed && !hasTriggered) {
+  if (statusText === "Accepted" && !hasTriggered) {
     hasTriggered = true;
-    buttonPressed = false;
     mountPrompt();
   }
 }
@@ -91,7 +80,6 @@ function checkForAccepted() {
 async function startObserver() {
   token = await getToken();
   const observer = new MutationObserver(() => {
-    attachSubmitListener();
     checkForAccepted();
   });
 
@@ -107,7 +95,6 @@ setInterval(async () => {
   if (location.href !== lastUrl) {
     lastUrl = location.href;
     hasTriggered = false;
-    buttonPressed = false;
     token = await getToken();
     topics = grabTopics();
     problemID = grabProblemSlug();

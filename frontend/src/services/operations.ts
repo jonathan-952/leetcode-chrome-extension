@@ -1,7 +1,7 @@
 import type { Problem } from "../popup/Dashboard";
 import { getToken } from "./submissions";
-// const API_URL = 'https://lcrecall.xyz/user';
-const API_URL = "http://localhost:8080/user";
+const API_URL = 'https://lcrecall.xyz/user';
+// const API_URL = "http://localhost:8080/user";
 
 export async function handleFetchProblems() {
   const token = await getToken();
